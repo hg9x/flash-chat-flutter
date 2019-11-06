@@ -8,11 +8,48 @@ class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      duration: Duration(seconds: 2),
+      vsync: this,
+    );
+
+    animation = CurvedAnimation(parent: controller, curve: Curves.bounceInOut);
+    controller.forward();
+    animation.addStatusListener((status) {
+      print("addStatusListener.status " + status.toString());
+      if (status == AnimationStatus.completed) {
+//        print("AnimationStatus.completed " + status.toString());
+        controller.reverse();
+      }
+      if (status == AnimationStatus.dismissed) {
+//        print("AnimationStatus.dismissed " + status.toString());
+        controller.forward();
+      }
+    });
+    controller.addListener(() {
+      setState(() {});
+//      print(controller.value);
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.amber,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -21,14 +58,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Container(
-                  child: Image.asset('images/logo.png'),
-                  height: 60.0,
+                Hero(
+                  tag: "images/logo.png",
+                  child: Container(
+                    child: Image.asset('images/logo.png'),
+                    height: 60.0 * (animation.value),
+                  ),
                 ),
                 Text(
-                  'Flash Chat',
+                  'Flash Chat ${(animation.value * 100).toInt()} %',
                   style: TextStyle(
-                    fontSize: 45.0,
+                    fontSize: 26.0,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -71,6 +111,40 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   height: 42.0,
                   child: Text(
                     'Register',
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: Material(
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(30.0),
+                elevation: 5.0,
+                child: MaterialButton(
+                  onPressed: () {
+//                    if (animation.status == AnimationStatus.completed)
+//                      controller.reverse(from: 0.5);
+//                    if (animation.status == AnimationStatus.dismissed) {
+//                      controller.forward();
+//                    }
+
+                    print("animation.status ${animation.status}");
+                    print("animation.isCompleted ${animation.isCompleted}");
+                    print("controller.isDismissed ${controller.isDismissed}");
+                    print("controller.status ${controller.status}");
+                    print("controller.isDismissed ${controller.isDismissed}");
+                    print("controller.isCompleted ${controller.isCompleted}");
+                    print("controller.isAnimating ${controller.isAnimating}");
+                    if (controller.isAnimating)
+                      controller.stop();
+                    else
+                      controller.forward();
+                  },
+                  minWidth: 200.0,
+                  height: 42.0,
+                  child: Text(
+                    'Reset Controller',
                   ),
                 ),
               ),

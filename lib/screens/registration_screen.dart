@@ -17,12 +17,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              height: 200.0,
-              child: Image.asset('images/logo.png'),
+            Expanded(child: Container()),
+            Hero(
+              tag: "images/logo.png",
+              child: Container(
+                height: 200.0,
+                child: Image.asset('images/logo.png'),
+              ),
             ),
             SizedBox(
-              height: 48.0,
+              height: 8.0,
             ),
             TextField(
               onChanged: (value) {
@@ -70,7 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
             ),
             SizedBox(
-              height: 24.0,
+              height: 8.0,
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -91,6 +95,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
             ),
+            Expanded(child: Container()),
           ],
         ),
       ),
