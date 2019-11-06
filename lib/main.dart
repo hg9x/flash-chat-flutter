@@ -16,6 +16,12 @@ class FlashChat extends StatelessWidget {
         ),
       ),
       home: WelcomeScreen(),
+      initialRoute: WelcomeScreen.id,
+      routes: {
+        WelcomeScreen.id: (context) => WelcomeScreen(),
+        RegistrationScreen.id: (context) => RegistrationScreen(),
+        LoginScreen.id: (context) => LoginScreen(),
+      },
     );
   }
 }
