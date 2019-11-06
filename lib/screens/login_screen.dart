@@ -1,4 +1,7 @@
+import 'package:flash_chat/widget/RoundedButton.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'LoginScreen';
@@ -6,11 +9,51 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation animationTween;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+      duration: Duration(milliseconds: 1700),
+      vsync: this,
+    );
+
+    controller.addListener(() {
+      setState(() {});
+    });
+    animationTween = ColorTween(begin: Colors.blue, end: Colors.purple /**/)
+        .animate(controller);
+    controller.forward();
+    animationTween.addStatusListener(
+      (status) {
+        print("addStatusListener.status " + status.toString());
+        if (status == AnimationStatus.completed) {
+//        print("AnimationStatus.completed " + status.toString());
+          controller.reverse();
+        }
+        if (status == AnimationStatus.dismissed) {
+//        print("AnimationStatus.dismissed " + status.toString());
+          controller.forward();
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: animationTween.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -20,36 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
             Expanded(
               child: Container(),
             ),
-            Hero(
-              tag: "images/logo.png",
-              child: Container(
-                height: 200.0,
-                child: Image.asset('images/logo.png'),
-              ),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            TextField(
-              onChanged: (value) {
-                //Do something with the user input.
-              },
-              decoration: InputDecoration(
-                hintText: 'Enter your email',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
+            Expanded(
+              flex: 10,
+              child: Hero(
+                tag: "images/logo.png",
+                child: Image.asset(
+                  'images/logo.png',
+                  width: 20,
+                  height: 20,
                 ),
               ),
             ),
@@ -60,45 +81,27 @@ class _LoginScreenState extends State<LoginScreen> {
               onChanged: (value) {
                 //Do something with the user input.
               },
-              decoration: InputDecoration(
-                hintText: 'Enter your password.',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-              ),
+              decoration:
+                  kTextFieldDecoration.copyWith(hintText: "Enter your email"),
             ),
             SizedBox(
               height: 8.0,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    //Implement login functionality.
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'Log In',
-                  ),
-                ),
-              ),
+            TextField(
+              onChanged: (value) {
+                //Do something with the user input.
+              },
+              decoration: kTextFieldDecoration.copyWith(
+                  hintText: "Enter your password"),
+              obscureText: true,
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            RoundedButton(
+              text: "Log In",
+              color: Colors.lightBlueAccent,
+              onPressed: () {},
             ),
             Expanded(
               child: Container(),
